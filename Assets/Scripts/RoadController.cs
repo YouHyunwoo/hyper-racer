@@ -4,6 +4,16 @@ using UnityEngine;
 
 public class RoadController : MonoBehaviour
 {
+    [SerializeField] GameObject[] gasObjects;
+
+    void Start()
+    {
+        foreach (var gasObject in gasObjects)
+        {
+            gasObject.SetActive(false);
+        }
+    }
+
     void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
@@ -18,5 +28,11 @@ public class RoadController : MonoBehaviour
         {
             GameManager.Instance.ReturnRoad(gameObject);
         }
+    }
+
+    public void SpawnGas()
+    {
+        int index = Random.Range(0, gasObjects.Length);
+        gasObjects[index].SetActive(true);
     }
 }

@@ -8,6 +8,7 @@ public class CarController : MonoBehaviour
     [SerializeField] float moveSpeed = 1f;
 
     public int Gas { get => gas; }
+    public float MoveSpeed { get => moveSpeed; }
 
     public void Move(float direction)
     {
@@ -28,6 +29,8 @@ public class CarController : MonoBehaviour
             if (gas <= 0) break;
             yield return new WaitForSeconds(1f);
         }
+
+        GameManager.Instance.EndGame();
     }
 
     void OnTriggerEnter(Collider other)
@@ -35,6 +38,7 @@ public class CarController : MonoBehaviour
         if (other.CompareTag("Gas"))
         {
             gas += 30;
+            other.gameObject.SetActive(false);
         }
     }
 }

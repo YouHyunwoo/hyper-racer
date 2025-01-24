@@ -6,6 +6,7 @@ using UnityEngine;
 public class GameManager : MonoBehaviour
 {
     public static GameManager Instance { get; private set; }
+
     [SerializeField] GameObject carPrefab;
     [SerializeField] GameObject roadPrefab;
 
@@ -20,7 +21,12 @@ public class GameManager : MonoBehaviour
 
     List<GameObject> activeRoads = new ();
 
+    int roadIndex = 0;
+
     CarController carController;
+
+    public enum State { Start, Play, End }
+    public State GameState { get; private set; }
 
     void Awake()
     {
@@ -35,14 +41,23 @@ public class GameManager : MonoBehaviour
 
     void Update()
     {
-        foreach(var activeRoad in activeRoads)
+        switch (GameState)
         {
-            activeRoad.transform.Translate(Vector3.back * Time.deltaTime);
-        }
+            case State.Start:
+                break;
+            case State.Play:
+                foreach(var activeRoad in activeRoads)
+                {
+                    activeRoad.transform.Translate(carController.MoveSpeed * Vector3.back * Time.deltaTime);
+                }
 
-        if (carController != null)
-        {
-            gasText.text = $"Gas: {carController.Gas}";
+                if (carController != null)
+                {
+                    gasText.text = $"Gas: {carController.Gas}";
+                }
+                break;
+            case State.End:
+                break;
         }
     }
 
@@ -61,6 +76,19 @@ public class GameManager : MonoBehaviour
         {
             carController.Move(1);
         };
+
+        GameState = State.Play;
+    }
+
+    public void EndGame()
+    {
+        GameState = State.End;
+        Destroy(carController.gameObject);
+        carController = null;
+        while (activeRoads.Count > 0)
+        {
+            ReturnRoad(activeRoads[0]);
+        }
     }
 
     void InitializeRoadPool()
@@ -75,18 +103,23 @@ public class GameManager : MonoBehaviour
 
     public void SpawnRoad(Vector3 position)
     {
+        GameObject road;
         if (roadPool.Count > 0)
         {
-            var road = roadPool.Dequeue();
+            road = roadPool.Dequeue();
             road.transform.position = position;
             road.SetActive(true);
-            activeRoads.Add(road);
         }
         else
         {
-            var road = Instantiate(roadPrefab, position, Quaternion.identity);
-            activeRoads.Add(road);
+            road = Instantiate(roadPrefab, position, Quaternion.identity);
         }
+
+        if (roadIndex > 0 && roadIndex % 2 == 0) {
+            road.GetComponent<RoadController>().SpawnGas();
+        }
+        activeRoads.Add(road);
+        roadIndex++;
     }
 
     public void ReturnRoad(GameObject road)
