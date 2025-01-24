@@ -4,15 +4,37 @@ using UnityEngine;
 
 public class CarController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    [SerializeField] int gas = 100;
+    [SerializeField] float moveSpeed = 1f;
+
+    public int Gas { get => gas; }
+
+    public void Move(float direction)
     {
-        
+        transform.Translate(Vector3.right * direction * Time.deltaTime);
+        transform.position = new Vector3(Mathf.Clamp(transform.position.x, -2f, 2f), transform.position.y, transform.position.z);
     }
 
-    // Update is called once per frame
-    void Update()
+    void Start()
     {
-        
+        StartCoroutine(GasCoroutine());
+    }
+
+    IEnumerator GasCoroutine()
+    {
+        while (true)
+        {
+            gas -= 10;
+            if (gas <= 0) break;
+            yield return new WaitForSeconds(1f);
+        }
+    }
+
+    void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("Gas"))
+        {
+            gas += 30;
+        }
     }
 }

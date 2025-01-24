@@ -4,15 +4,19 @@ using UnityEngine;
 
 public class RoadController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    void OnTriggerEnter(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            GameManager.Instance.SpawnRoad(transform.position + Vector3.forward * 10f);
+        }
     }
 
-    // Update is called once per frame
-    void Update()
+    void OnTriggerExit(Collider other)
     {
-        
+        if (other.CompareTag("Player"))
+        {
+            GameManager.Instance.ReturnRoad(gameObject);
+        }
     }
 }

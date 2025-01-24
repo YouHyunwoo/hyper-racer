@@ -1,18 +1,98 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+    public static GameManager Instance { get; private set; }
+    [SerializeField] GameObject carPrefab;
+    [SerializeField] GameObject roadPrefab;
+
+    // UI 관련 코드
+    [SerializeField] MoveButton leftMoveButton;
+    [SerializeField] MoveButton rightMoveButton;
+
+    [SerializeField] TextMeshProUGUI gasText;
+
+    Queue<GameObject> roadPool = new ();
+    int roadPoolSize = 3;
+
+    List<GameObject> activeRoads = new ();
+
+    CarController carController;
+
+    void Awake()
     {
-        
+        Instance = this;
     }
 
-    // Update is called once per frame
+    void Start()
+    {
+        InitializeRoadPool();
+        StartGame();
+    }
+
     void Update()
     {
-        
+        foreach(var activeRoad in activeRoads)
+        {
+            activeRoad.transform.Translate(Vector3.back * Time.deltaTime);
+        }
+
+        if (carController != null)
+        {
+            gasText.text = $"Gas: {carController.Gas}";
+        }
+    }
+
+    void StartGame()
+    {
+        SpawnRoad(Vector3.zero);
+
+        carController = Instantiate(carPrefab, new Vector3(0, 0, -3f), Quaternion.identity).GetComponent<CarController>();
+
+        leftMoveButton.OnMoveButtonDown += () => 
+        {
+            carController.Move(-1);
+        };
+
+        rightMoveButton.OnMoveButtonDown += () => 
+        {
+            carController.Move(1);
+        };
+    }
+
+    void InitializeRoadPool()
+    {
+        for (int i = 0; i < roadPoolSize; i++)
+        {
+            var road = Instantiate(roadPrefab);
+            road.SetActive(false);
+            roadPool.Enqueue(road);
+        }
+    }
+
+    public void SpawnRoad(Vector3 position)
+    {
+        if (roadPool.Count > 0)
+        {
+            var road = roadPool.Dequeue();
+            road.transform.position = position;
+            road.SetActive(true);
+            activeRoads.Add(road);
+        }
+        else
+        {
+            var road = Instantiate(roadPrefab, position, Quaternion.identity);
+            activeRoads.Add(road);
+        }
+    }
+
+    public void ReturnRoad(GameObject road)
+    {
+        road.SetActive(false);
+        activeRoads.Remove(road);
+        roadPool.Enqueue(road);
     }
 }
