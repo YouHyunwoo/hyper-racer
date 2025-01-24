@@ -10,15 +10,15 @@ public class CarController : MonoBehaviour
     public int Gas { get => gas; }
     public float MoveSpeed { get => moveSpeed; }
 
+    void Start()
+    {
+        StartCoroutine(GasCoroutine());
+    }
+
     public void Move(float direction)
     {
         transform.Translate(Vector3.right * direction * Time.deltaTime);
         transform.position = new Vector3(Mathf.Clamp(transform.position.x, -2f, 2f), transform.position.y, transform.position.z);
-    }
-
-    void Start()
-    {
-        StartCoroutine(GasCoroutine());
     }
 
     IEnumerator GasCoroutine()
@@ -26,8 +26,8 @@ public class CarController : MonoBehaviour
         while (true)
         {
             gas -= 10;
-            if (gas <= 0) break;
             yield return new WaitForSeconds(1f);
+            if (gas <= 0) break;
         }
 
         GameManager.Instance.EndGame();
@@ -37,6 +37,7 @@ public class CarController : MonoBehaviour
     {
         if (other.CompareTag("Gas"))
         {
+            Debug.Log("Gas");
             gas += 30;
             other.gameObject.SetActive(false);
         }

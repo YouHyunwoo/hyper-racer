@@ -16,6 +16,10 @@ public class GameManager : MonoBehaviour
 
     [SerializeField] TextMeshProUGUI gasText;
 
+    [SerializeField] GameObject startPanelPrefab;
+    [SerializeField] GameObject endPanelPrefab;
+    [SerializeField] Transform canvasTransform;
+
     Queue<GameObject> roadPool = new ();
     int roadPoolSize = 3;
 
@@ -36,7 +40,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         InitializeRoadPool();
-        StartGame();
+        GameState = State.Start;
+        ShowStartPanel();
     }
 
     void Update()
@@ -61,11 +66,14 @@ public class GameManager : MonoBehaviour
         }
     }
 
-    void StartGame()
+    public void StartGame()
     {
+        roadIndex = 0;
+
         SpawnRoad(Vector3.zero);
 
-        carController = Instantiate(carPrefab, new Vector3(0, 0, -3f), Quaternion.identity).GetComponent<CarController>();
+        var carObject = Instantiate(carPrefab, new Vector3(0, 0, -3f), Quaternion.identity);
+        carController = carObject.GetComponent<CarController>();
 
         leftMoveButton.OnMoveButtonDown += () => 
         {
@@ -80,6 +88,28 @@ public class GameManager : MonoBehaviour
         GameState = State.Play;
     }
 
+    #region UI
+
+    public void ShowStartPanel()
+    {
+        var startPanelController = Instantiate(startPanelPrefab, canvasTransform).GetComponent<StartPanelController>();
+        startPanelController.OnClickStartButtonEvent += () => {
+            Destroy(startPanelController.gameObject);
+            StartGame();
+        };
+    }
+
+    public void ShowEndPanel()
+    {
+        var endPanelController = Instantiate(endPanelPrefab, canvasTransform).GetComponent<StartPanelController>();
+        endPanelController.OnClickStartButtonEvent += () => {
+            Destroy(endPanelController.gameObject);
+            ShowStartPanel();
+        };
+    }
+
+    #endregion
+
     public void EndGame()
     {
         GameState = State.End;
@@ -89,6 +119,8 @@ public class GameManager : MonoBehaviour
         {
             ReturnRoad(activeRoads[0]);
         }
+
+        ShowEndPanel();
     }
 
     void InitializeRoadPool()
