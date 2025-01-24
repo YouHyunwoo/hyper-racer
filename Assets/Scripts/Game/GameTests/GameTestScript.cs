@@ -64,28 +64,49 @@ public class GameTestScript
             new (+1f, 0.2f, -3f),
         };
         float rayDistance = 10f;
+        var p = new Vector3(0, 0, 0);
 
         while (gameManager.GameState == GameManager.State.Play)
         {
+            // bool isFound = false;
+            var set = new List<int>();
+            var enemyPositions = new Vector3[] {
+                new (-1f, 0.2f, -10f),
+                new (+1f, 0.2f, -10f),
+                new ( 0f, 0.2f, -10f),
+            };
             bool isFound = false;
-            for (int i = 0; i < positions.Length; i++) {
-                var position = positions[i];
+            for (int i = 0; i < enemyPositions.Length; i++) {
+                var position = enemyPositions[i];
                 RaycastHit hit;
-                if (Physics.Raycast(position, Vector3.forward, out hit, rayDistance, LayerMask.GetMask("Gas")))
+                if (!Physics.Raycast(position, Vector3.forward, out hit, 20, LayerMask.GetMask("Enemy")))
                 {
-                    MoveCar(position, leftMoveButton, rightMoveButton, carController);
+                    set.Add((int)position.x);
+                    p.x = position.x;
                     isFound = true;
                 }
             }
-            if (!isFound)
+            if (isFound)
             {
-                MoveButtonUp(leftMoveButton.gameObject);
-                MoveButtonUp(rightMoveButton.gameObject);
+                Debug.Log(p.x);
+                MoveCar(p, leftMoveButton, rightMoveButton, carController);
+            }
+            else {
+                for (int i = 0; i < positions.Length; i++) {
+                    if (!set.Contains((int)positions[i].x)) { continue; }
+                    var position = positions[i];
+                    RaycastHit hit;
+                    if (Physics.Raycast(position, Vector3.forward, out hit, rayDistance, LayerMask.GetMask("Gas")))
+                    {
+                        p.x = position.x;
+                        MoveCar(position, leftMoveButton, rightMoveButton, carController);
+                    }
+                }
             }
 
-            Debug.DrawRay(positions[0], Vector3.forward * rayDistance, Color.red);
-            Debug.DrawRay(positions[1], Vector3.forward * rayDistance, Color.blue);
-            Debug.DrawRay(positions[2], Vector3.forward * rayDistance, Color.green);
+            Debug.DrawRay(enemyPositions[0], Vector3.forward * 20, Color.red);
+            Debug.DrawRay(enemyPositions[1], Vector3.forward * 20, Color.blue);
+            Debug.DrawRay(enemyPositions[2], Vector3.forward * 20, Color.green);
 
             elapsedTime += Time.deltaTime;
 
@@ -119,7 +140,6 @@ public class GameTestScript
 
     void MoveCar(Vector3 targetPosition, MoveButton leftMoveButton, MoveButton rightMoveButton, CarController carController)
     {
-        Debug.Log(targetPosition + " " + carController.transform.position);
         if (targetPosition.x < carController.transform.position.x)
         {
             MoveButtonDown(leftMoveButton.gameObject);

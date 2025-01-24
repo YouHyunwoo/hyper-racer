@@ -8,7 +8,9 @@ public class GameManager : MonoBehaviour
     public static GameManager Instance { get; private set; }
 
     [SerializeField] GameObject carPrefab;
+    [SerializeField] GameObject enemyPrefab;
     [SerializeField] GameObject roadPrefab;
+    [SerializeField] Transform enemyTransform;
 
     // UI 관련 코드
     [SerializeField] MoveButton leftMoveButton;
@@ -28,6 +30,7 @@ public class GameManager : MonoBehaviour
     int roadIndex = 0;
 
     CarController carController;
+    int enemyCount = 2;
 
     public enum State { Start, Play, End }
     public State GameState { get; private set; }
@@ -69,6 +72,7 @@ public class GameManager : MonoBehaviour
     public void StartGame()
     {
         roadIndex = 0;
+        enemyCount = 2;
 
         SpawnRoad(Vector3.zero);
 
@@ -86,6 +90,27 @@ public class GameManager : MonoBehaviour
         };
 
         GameState = State.Play;
+
+        StartCoroutine(SpawnEnemy());
+    }
+
+    IEnumerator SpawnEnemy()
+    {
+        int count = 0;
+        while (GameState == State.Play)
+        {
+            yield return new WaitForSeconds(1f);
+            count++;
+            if (count % 30 == 0)
+            {
+                enemyCount++;
+            }
+            if (enemyTransform.childCount >= enemyCount) { continue; }
+            if (Random.value >= 0.3f) { continue; }
+
+            var position = new Vector3(Random.Range(-1, 2), 0f, -8f);
+            Instantiate(enemyPrefab, position, Quaternion.identity, enemyTransform);
+        }
     }
 
     #region UI
@@ -119,8 +144,14 @@ public class GameManager : MonoBehaviour
         {
             ReturnRoad(activeRoads[0]);
         }
+        foreach (Transform child in enemyTransform)
+        {
+            Destroy(child.gameObject);
+        }
 
         ShowEndPanel();
+
+        StopAllCoroutines();
     }
 
     void InitializeRoadPool()

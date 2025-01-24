@@ -15,6 +15,11 @@ public class CarController : MonoBehaviour
         StartCoroutine(GasCoroutine());
     }
 
+    void Update()
+    {
+        moveSpeed += 0.1f * Time.deltaTime;
+    }
+
     public void Move(float direction)
     {
         transform.Translate(Vector3.right * direction * Time.deltaTime);
@@ -37,9 +42,12 @@ public class CarController : MonoBehaviour
     {
         if (other.CompareTag("Gas"))
         {
-            Debug.Log("Gas");
             gas += 30;
             other.gameObject.SetActive(false);
+        }
+        else if (other.CompareTag("Enemy"))
+        {
+            GameManager.Instance.EndGame();
         }
     }
 }
