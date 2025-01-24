@@ -856,6 +856,37 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1302600496}
   m_CullTransparentMesh: 1
+--- !u!1 &1318172052
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1318172053}
+  m_Layer: 0
+  m_Name: Enemy
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1318172053
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1318172052}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1328293111
 GameObject:
   m_ObjectHideFlags: 0
@@ -980,7 +1011,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   carPrefab: {fileID: 584629686262914546, guid: db4d24371e9ddd8439b0d4997a962c9a, type: 3}
+  enemyPrefab: {fileID: 584629686262914546, guid: 9f78d1dc394b68c46827f2ff0462eac2, type: 3}
   roadPrefab: {fileID: 3485635299630190435, guid: 722584ae668ff524283eec3c33682ff5, type: 3}
+  enemyTransform: {fileID: 1318172053}
   leftMoveButton: {fileID: 2081447430}
   rightMoveButton: {fileID: 154948691}
   gasText: {fileID: 1302600498}
@@ -1249,3 +1282,4 @@ SceneRoots:
   - {fileID: 1811510423}
   - {fileID: 2079907379}
   - {fileID: 889479141}
+  - {fileID: 1318172053}

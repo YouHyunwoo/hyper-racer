@@ -9,12 +9,12 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 3362016079254125857}
-  - component: {fileID: 6180644910566014539}
   - component: {fileID: 6869362744597786164}
-  - component: {fileID: 3039028365042645020}
-  m_Layer: 0
-  m_Name: Car
-  m_TagString: Player
+  - component: {fileID: 440207049471134377}
+  - component: {fileID: -3011350190029773852}
+  m_Layer: 7
+  m_Name: Enemy
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -35,20 +35,6 @@ Transform:
   - {fileID: 4237779161747276293}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &6180644910566014539
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 584629686262914546}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e01f1a163efb30546924657751df01f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  gas: 1000
-  moveSpeed: 5
 --- !u!54 &6869362744597786164
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -76,7 +62,7 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
---- !u!65 &3039028365042645020
+--- !u!65 &440207049471134377
 BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -97,6 +83,20 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 0.5, y: 0.5, z: 1}
   m_Center: {x: 0, y: 0.3, z: 0}
+--- !u!114 &-3011350190029773852
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 584629686262914546}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f3c08a248820d134db15cc3da0b3f61b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  moveSpeed: 0
+  isHit: 0
 --- !u!1 &6189705763189051888
 GameObject:
   m_ObjectHideFlags: 0
@@ -108,9 +108,9 @@ GameObject:
   - component: {fileID: 4237779161747276293}
   - component: {fileID: 250720065843556572}
   - component: {fileID: 598643045364881995}
-  m_Layer: 0
+  m_Layer: 7
   m_Name: Car Model
-  m_TagString: Player
+  m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -158,7 +158,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 69770c84ad5c03b4da280b496d1bdc37, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
