@@ -6,7 +6,7 @@ public class RoadController : MonoBehaviour
 {
     [SerializeField] GameObject[] gasObjects;
 
-    void Start()
+    void OnDisable()
     {
         foreach (var gasObject in gasObjects)
         {
